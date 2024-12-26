@@ -18,8 +18,8 @@ Answer the question based on the above context: {question}
 
 app = FastAPI()
 
-# Load Hugging Face model and tokenizer (e.g., GPT-2 or any other model like 'mistral-7b', 'llama')
-model_name = "gpt2"  # You can replace this with any other model like 'mistral-7b' or 'llama'
+
+model_name = "gpt2" 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
