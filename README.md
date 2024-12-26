@@ -11,12 +11,12 @@
 
 2. **GenAI Module**  
    - **Technologies Used**:  
-     - OLLama: Provides the LLM (Mistral) to generate responses based on retrieved document chunks.  
+     - hugging face: provides the "gpt2" model to generate chunks and responses  
    - **Purpose**:  
      - Generates embeddings for document chunks and produces natural language responses based on the retrieved context.  
    - **Key Components**:  
-     - **OllamaEmbeddings**: Used to generate embeddings when querying documents.  
-     - **LLM Integration**: The Mistral model from Ollama processes the retrieved context and generates responses.
+     - **Transformers library**: Used to generate embeddings when querying documents.  
+     - **LLM Integration**: The gpt2 model processes the retrieved context and generates responses.
 
 3. **Backend Module**  
    - **Technology Used**:  
