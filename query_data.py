@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from langchain.vectorstores.chroma import Chroma
 from langchain.prompts import ChatPromptTemplate
-from langchain_community.llms.ollama import Ollama
+from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 from get_embedding_function import get_embedding_function
 
 CHROMA_PATH = "chroma"
@@ -18,6 +18,13 @@ Answer the question based on the above context: {question}
 
 app = FastAPI()
 
+# Load Hugging Face model and tokenizer (e.g., GPT-2 or any other model like 'mistral-7b', 'llama')
+model_name = "gpt2"  # You can replace this with any other model like 'mistral-7b' or 'llama'
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# Initialize the Hugging Face pipeline for text generation
+hf_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
 @app.post("/query-pdf/")
 async def query_pdf(query_text: str):
@@ -43,8 +50,9 @@ def query_rag(query_text: str):
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     prompt = prompt_template.format(context=context_text, question=query_text)
 
-    model = Ollama(model="mistral")
-    response_text = model.invoke(prompt)
+    # Generate response using Hugging Face model
+    generated_output = hf_pipeline(prompt, max_length=200, num_return_sequences=1)
+    response_text = generated_output[0]['generated_text']
 
     sources = [doc.metadata.get("id", None) for doc, _score in results]
     formatted_response = f"Response: {response_text}\nSources: {sources}"
